@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Send } from "lucide-react";
+import { motion } from "framer-motion";
 import { toast } from "sonner";
 
 const PaymentForm = () => {
@@ -29,58 +30,69 @@ const PaymentForm = () => {
   };
 
   return (
-    <Card className="p-6 shadow-card animate-slide-up">
-      <h2 className="text-2xl font-bold mb-6 text-foreground">Quick Send Payment</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="recipient">Recipient Business</Label>
-          <Input
-            id="recipient"
-            placeholder="Enter business name or account"
-            value={recipient}
-            onChange={(e) => setRecipient(e.target.value)}
-            className="bg-background"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Card className="p-6 shadow-card">
+        <h2 className="text-2xl font-bold mb-6 text-foreground">Quick Send Payment</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="amount">Amount</Label>
+            <Label htmlFor="recipient">Recipient Business</Label>
             <Input
-              id="amount"
-              type="number"
-              placeholder="0.00"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              id="recipient"
+              placeholder="Enter business name or account"
+              value={recipient}
+              onChange={(e) => setRecipient(e.target.value)}
               className="bg-background"
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="currency">Currency</Label>
-            <Select value={currency} onValueChange={setCurrency}>
-              <SelectTrigger id="currency" className="bg-background">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="USD">USD</SelectItem>
-                <SelectItem value="EUR">EUR</SelectItem>
-                <SelectItem value="GBP">GBP</SelectItem>
-                <SelectItem value="NGN">NGN</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
 
-        <Button 
-          type="submit" 
-          className="w-full bg-gradient-primary hover:opacity-90 transition-opacity"
-          size="lg"
-        >
-          <Send className="w-4 h-4 mr-2" />
-          Send Payment
-        </Button>
-      </form>
-    </Card>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="amount">Amount</Label>
+              <Input
+                id="amount"
+                type="number"
+                placeholder="0.00"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                className="bg-background"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="currency">Currency</Label>
+              <Select value={currency} onValueChange={setCurrency}>
+                <SelectTrigger id="currency" className="bg-background">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="USD">USD</SelectItem>
+                  <SelectItem value="EUR">EUR</SelectItem>
+                  <SelectItem value="GBP">GBP</SelectItem>
+                  <SelectItem value="NGN">NGN</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Button 
+              type="submit" 
+              className="w-full bg-gradient-primary hover:opacity-90 transition-opacity"
+              size="lg"
+            >
+              <Send className="w-4 h-4 mr-2" />
+              Send Payment
+            </Button>
+          </motion.div>
+        </form>
+      </Card>
+    </motion.div>
   );
 };
 

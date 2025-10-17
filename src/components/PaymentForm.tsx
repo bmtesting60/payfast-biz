@@ -7,11 +7,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Send } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { useTransactions } from "@/contexts/TransactionContext";
 
 const PaymentForm = () => {
   const [amount, setAmount] = useState("");
   const [recipient, setRecipient] = useState("");
   const [currency, setCurrency] = useState("USD");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { addTransaction } = useTransactions();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,12 +24,25 @@ const PaymentForm = () => {
       return;
     }
 
+    setIsSubmitting(true);
+
+    // Add transaction to the list
+    addTransaction({
+      type: "sent",
+      business: recipient,
+      amount: parseFloat(amount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+      currency: currency,
+    });
+
     toast.success("Payment sent successfully!", {
       description: `${currency} ${amount} sent to ${recipient}`,
     });
 
-    setAmount("");
-    setRecipient("");
+    setTimeout(() => {
+      setAmount("");
+      setRecipient("");
+      setIsSubmitting(false);
+    }, 500);
   };
 
   return (
@@ -85,9 +101,10 @@ const PaymentForm = () => {
               type="submit" 
               className="w-full bg-gradient-primary hover:opacity-90 transition-opacity"
               size="lg"
+              disabled={isSubmitting}
             >
               <Send className="w-4 h-4 mr-2" />
-              Send Payment
+              {isSubmitting ? "Processing..." : "Send Payment"}
             </Button>
           </motion.div>
         </form>

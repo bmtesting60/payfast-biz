@@ -6,6 +6,12 @@ import Navbar from "@/components/Navbar";
 import StatsCard from "@/components/StatsCard";
 import PaymentForm from "@/components/PaymentForm";
 import TransactionList from "@/components/TransactionList";
+import { InvoiceGenerator } from "@/components/InvoiceGenerator";
+import { PaymentLinkGenerator } from "@/components/PaymentLinkGenerator";
+import { RecurringPaymentSetup } from "@/components/RecurringPaymentSetup";
+import { PaymentAnalytics } from "@/components/PaymentAnalytics";
+import { RefundManagement } from "@/components/RefundManagement";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 
 const Dashboard = () => {
@@ -96,19 +102,47 @@ const Dashboard = () => {
             </motion.div>
           </motion.div>
 
-          {/* Payment Form and Transactions */}
+          {/* Main Content with Tabs */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="grid lg:grid-cols-3 gap-6"
           >
-            <div className="lg:col-span-1">
-              <PaymentForm />
-            </div>
-            <div className="lg:col-span-2">
-              <TransactionList />
-            </div>
+            <Tabs defaultValue="payments" className="space-y-6">
+              <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
+                <TabsTrigger value="payments">Payments</TabsTrigger>
+                <TabsTrigger value="analytics">Analytics</TabsTrigger>
+                <TabsTrigger value="tools">Tools</TabsTrigger>
+                <TabsTrigger value="refunds">Refunds</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="payments" className="space-y-6">
+                <div className="grid lg:grid-cols-3 gap-6">
+                  <div className="lg:col-span-1">
+                    <PaymentForm />
+                  </div>
+                  <div className="lg:col-span-2">
+                    <TransactionList />
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="analytics">
+                <PaymentAnalytics />
+              </TabsContent>
+
+              <TabsContent value="tools" className="space-y-6">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <InvoiceGenerator />
+                  <PaymentLinkGenerator />
+                  <RecurringPaymentSetup />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="refunds">
+                <RefundManagement />
+              </TabsContent>
+            </Tabs>
           </motion.div>
         </div>
       </div>

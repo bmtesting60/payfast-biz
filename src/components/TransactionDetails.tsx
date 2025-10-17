@@ -94,6 +94,26 @@ const TransactionDetails = ({ transaction, open, onOpenChange }: TransactionDeta
               <span className="text-muted-foreground">Business</span>
               <span className="font-semibold">{transaction.business}</span>
             </div>
+            {transaction.gateway && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Payment Gateway</span>
+                <Badge variant="outline" className="capitalize">{transaction.gateway}</Badge>
+              </div>
+            )}
+            {transaction.invoiceId && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Invoice ID</span>
+                <span className="font-mono text-xs">{transaction.invoiceId}</span>
+              </div>
+            )}
+            {transaction.isRecurring && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Recurring</span>
+                <Badge variant="secondary" className="capitalize">
+                  {transaction.recurringFrequency}
+                </Badge>
+              </div>
+            )}
             <div className="flex justify-between">
               <span className="text-muted-foreground">Date</span>
               <span className="font-semibold">{transaction.date}</span>
@@ -120,6 +140,14 @@ const TransactionDetails = ({ transaction, open, onOpenChange }: TransactionDeta
                 </Button>
               </div>
             </div>
+            {transaction.refundedAmount && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Refunded Amount</span>
+                <span className="font-semibold text-warning">
+                  {transaction.currency} {transaction.refundedAmount}
+                </span>
+              </div>
+            )}
           </div>
 
           <Separator />

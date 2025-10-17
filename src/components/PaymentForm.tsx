@@ -4,15 +4,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Send } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { useTransactions } from "@/contexts/TransactionContext";
+import { PaymentGatewaySelector } from "./PaymentGatewaySelector";
 
 const PaymentForm = () => {
   const [amount, setAmount] = useState("");
   const [recipient, setRecipient] = useState("");
   const [currency, setCurrency] = useState("USD");
+  const [gateway, setGateway] = useState("paystack");
+  const [isRecurring, setIsRecurring] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { addTransaction } = useTransactions();
 
@@ -32,15 +36,21 @@ const PaymentForm = () => {
       business: recipient,
       amount: parseFloat(amount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
       currency: currency,
+      gateway: gateway as "paystack" | "stripe" | "flutterwave" | "paypal",
+      isRecurring: isRecurring,
+      recurringFrequency: isRecurring ? "monthly" : undefined,
+      refundable: true,
     });
 
     toast.success("Payment sent successfully!", {
-      description: `${currency} ${amount} sent to ${recipient}`,
+      description: `${currency} ${amount} sent to ${recipient} via ${gateway}`,
     });
 
     setTimeout(() => {
       setAmount("");
       setRecipient("");
+      setGateway("paystack");
+      setIsRecurring(false);
       setIsSubmitting(false);
     }, 500);
   };
@@ -91,6 +101,20 @@ const PaymentForm = () => {
                 </SelectContent>
               </Select>
             </div>
+          </div>
+
+          <PaymentGatewaySelector value={gateway} onChange={setGateway} />
+
+          <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+            <div className="space-y-0.5">
+              <Label htmlFor="recurring">Recurring Payment</Label>
+              <p className="text-xs text-muted-foreground">Setup automatic monthly payments</p>
+            </div>
+            <Switch
+              id="recurring"
+              checked={isRecurring}
+              onCheckedChange={setIsRecurring}
+            />
           </div>
 
           <motion.div
